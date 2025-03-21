@@ -112,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="h4 mb-3">Your Score: ${score}/${questions.length}</p>
                     <p class="h5 mb-4">${percentage}%</p>
                     <div class="mt-4">
-                        <a href="/index.html" class="btn btn-primary btn-lg me-3">Try Another Quiz</a>
-                        <a href="/quiz.html?category=${category}" class="btn btn-outline-primary btn-lg">Retry This Quiz</a>
+                        <a href="index.html" class="btn btn-primary btn-lg me-3">Try Another Quiz</a>
+                        <a href="quiz.html?category=${category}" class="btn btn-outline-primary btn-lg">Retry This Quiz</a>
                     </div>
                 </div>
             `;
