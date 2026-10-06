@@ -1,0 +1,23 @@
+{
+  "name": "v-quiz-platform",
+  "version": "1.0.0",
+  "description": "V-Quiz: Real-Time Multiplayer Quiz Platform built with React, Node.js, Express, Socket.io, and MongoDB",
+  "scripts": {
+    "start:server": "cd server && npm start",
+    "dev:server": "cd server && npm run dev",
+    "start:client": "cd client && npm run dev",
+    "build:client": "cd client && npm run build"
+  },
+  "keywords": [
+    "quiz",
+    "multiplayer",
+    "realtime",
+    "socketio",
+    "react",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "Nagesh Patchipala",
+  "license": "MIT"
+}
