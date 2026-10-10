@@ -139,7 +139,7 @@ export const LiveGame = ({
 
       {/* 4 Interactive Answer Cards */}
       <div className="answer-grid" style={{ marginBottom: '28px' }}>
-        {options.map((opt, idx) => {
+          {(Array.isArray(options) ? options : []).map((opt, idx) => {
           const style = OPTION_STYLES[idx % OPTION_STYLES.length];
           const isSelected = selectedOption === opt;
           const isCorrectAnswer = roundResult && roundResult.correctAnswer === opt;

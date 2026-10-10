@@ -11,11 +11,24 @@ const OPTION_STYLES = [
   { color: 'green', shape: '■' }
 ];
 
+const shuffleOptions = (options) => {
+  if (!Array.isArray(options)) return [];
+  const shuffled = [...options];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled;
+};
+
 export const SoloQuiz = ({ quizId, onExit, onPlayAgain }) => {
   const { user } = useAuth();
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [shuffledQuestions, setShuffledQuestions] = useState({});
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [userAnswers, setUserAnswers] = useState([]);
@@ -31,9 +44,21 @@ export const SoloQuiz = ({ quizId, onExit, onPlayAgain }) => {
       try {
         const res = await api.quizzes.getById(quizId);
         if (res.success && res.data) {
-          setQuiz(res.data);
-          setTimeLeft(res.data.questions[0]?.timeLimit || 20);
-        }
+        const loadedQuiz = res.data;
+
+          setQuiz(loadedQuiz);
+
+          setShuffledQuestions(
+            Object.fromEntries(
+              loadedQuiz.questions.map((question, index) => [
+        index,
+                shuffleOptions(question.options)
+      ])
+    )
+  );
+
+  setTimeLeft(loadedQuiz.questions[0]?.timeLimit || 20);
+}
       } catch (err) {
         console.error('Failed to load quiz:', err);
       } finally {
@@ -287,7 +312,7 @@ export const SoloQuiz = ({ quizId, onExit, onPlayAgain }) => {
 
       {/* Answer Cards */}
       <div className="answer-grid" style={{ marginBottom: '28px' }}>
-        {currentQ.options.map((opt, idx) => {
+        {(shuffledQuestions[currentIndex] || currentQ.options).map((opt, idx) => {
           const style = OPTION_STYLES[idx % OPTION_STYLES.length];
           const isSelected = selectedAnswer === opt;
           const isCorrect = isAnswered && opt === currentQ.correctAnswer;

@@ -1,6 +1,16 @@
 const { QuizRepository } = require('../models/Quiz');
 const { ScoreRepository } = require('../models/Score');
+const shuffleOptions = (options) => {
+  if (!Array.isArray(options)) return [];
+  const shuffled = [...options];
 
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled;
+};
 // Active multiplayer rooms in memory
 const rooms = new Map();
 
@@ -279,12 +289,15 @@ function sendQuestion(room, io) {
     player.isCorrect = false;
   }
 
+  const shuffledOptions = shuffleOptions(q.options);
+  room.currentOptions = shuffledOptions;
+
   // Broadcast question payload (without revealing correct answer!)
   io.to(room.code).emit('game:new-question', {
     questionIndex: room.currentQuestionIndex,
     totalQuestions: room.quiz.questions.length,
     question: q.question,
-    options: q.options,
+    options: shuffledOptions,
     timeLimit: q.timeLimit || 20,
     points: q.points || 1000
   });
@@ -311,7 +324,8 @@ function endQuestion(room, io) {
 
   // Calculate answer distribution
   const distribution = {};
-  q.options.forEach(opt => { distribution[opt] = 0; });
+  const roundOptions = room.currentOptions || q.options || [];
+  roundOptions.forEach(opt => { distribution[opt] = 0; });
   distribution['No Answer'] = 0;
 
   for (const player of room.players.values()) {
