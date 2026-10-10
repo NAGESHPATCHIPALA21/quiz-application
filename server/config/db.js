@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 let isMongoConnected = false;
 
 const connectDB = async () => {
-  const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/vquiz';
+  const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/vquiz';
   
   try {
     // Attempt fast connection with 2.5s timeout
